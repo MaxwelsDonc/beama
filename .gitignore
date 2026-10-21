@@ -1,0 +1,21 @@
+# LaTeX 构建产物
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.xdv
+*.vrb
+_minted*/
+.DS_Store
+
+# agent 会话产物（harness 自动生成，不入库）
+.zcode/
+
+# 构建出的 PDF 与预览图（.tex 源保留入库）
+talks/*/*.pdf
+talks/*/preview-*.png

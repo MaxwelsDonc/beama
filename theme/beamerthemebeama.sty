@@ -1,0 +1,211 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemebeama}[2026/10/21 Beama beamer theme]
+
+\mode<presentation>
+
+\usefonttheme{professionalfonts}
+\RequirePackage{tcolorbox}
+\RequirePackage{tikz}
+\usetikzlibrary{calc}
+\RequirePackage{ragged2e}   % 卡片内 \RaggedRight，消除窄栏两端对齐的词距拉伸
+\RequirePackage{booktabs}  % 表格三细线（\toprule/\midrule/\bottomrule），学术表格标准
+
+\usecolortheme{beama}
+% fonttheme 守卫式加载，保证本文件可独立编译
+\IfFileExists{beamerfontthemebeama.sty}
+  {\usefonttheme{beama}}{}
+% \aaheadfont 由 fonttheme 定义；未加载时回退衬线族
+\providecommand{\aaheadfont}{\rmfamily}
+\providecommand{\aamedfont}{\sffamily}
+\linespread{1.08}   % 正文行距微放开，给 CJK 留呼吸空间（字体加载之后）
+
+% --- 版面基调 ---
+\setbeamersize{text margin left=0.75cm, text margin right=0.75cm}
+\setbeamertemplate{navigation symbols}{}   % 禁导航图标
+
+% --- 封面页：大留白 + clay 短粗线为唯一强调 ---
+\setbeamertemplate{title page}{%
+  \vspace*{1.2cm}
+  {\usebeamerfont{title}\usebeamercolor[fg]{title}\aaheadfont\inserttitle\par}
+  \vspace{0.5em}
+  {\color{aaclay}\rule{1.6cm}{2.5pt}\par}
+  \vspace{0.6em}
+  {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\mdseries\insertsubtitle\par}
+  \vfill
+  {\usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor\par}
+  \vspace{0.3em}
+  {\usebeamerfont{institute}\usebeamercolor[fg]{institute}\insertinstitute\par}
+  \vspace{0.3em}
+  {\usebeamerfont{date}\usebeamercolor[fg]{date}\insertdate\par}
+  \vspace*{0.6cm}
+}
+
+% --- 帧标题样式：clayrule（clay 通栏细线，正式版式）| thinline（linen 通栏细线）---
+\newcommand{\aaSetFrametitle}[1]{%
+  \def\aa@frametitlestyle{#1}%
+  \setbeamertemplate{frametitle}{\aa@frametitle}}
+\def\aa@frametitle{%
+  \def\aa@tmp{clayrule}%
+  \ifx\aa@frametitlestyle\aa@tmp
+    % clayrule：标题 + clay 通栏细线（克制的单强调，正式感）
+    \vspace{0.5cm}
+    {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\aaheadfont\insertframetitle\par}%
+    \ifx\insertframesubtitle\empty\else
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\color{aastone}\insertframesubtitle\par}\fi
+    \vspace{0.2em}
+    {\color{aaclay}\rule{\textwidth}{0.6pt}\par}
+    \vspace{0.3em}
+  \else
+    \def\aa@tmpb{thinline}%
+    \ifx\aa@frametitlestyle\aa@tmpb\else
+      \PackageWarning{beamerthemebeama}{%
+        Unknown frametitle style `\aa@frametitlestyle', falling back to `thinline'}%
+    \fi
+    % thinline：标题 + linen 通栏细线（经典学术，间距收紧）
+    \vspace{0.3cm}
+    {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\aaheadfont\insertframetitle\par}%
+    \ifx\insertframesubtitle\empty\else
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\par}\fi
+    \vspace{0.12em}
+    {\color{aalinen}\rule{\textwidth}{0.6pt}\par}
+  \fi}
+\aaSetFrametitle{clayrule}   % 默认 clayrule
+
+% --- 目录样式：clay 编号 + ink 条目；非当前章节（章节页 mini-TOC）石灰色 ---
+\setbeamertemplate{section in toc}{%
+  \leavevmode{\color{aaclay}\bfseries\inserttocsectionnumber.}\hspace{0.45em}%
+  {\color{aaink}\inserttocsection}\par\vspace{0.35em}}
+\setbeamertemplate{section in toc shaded}{%
+  \leavevmode{\color{aastone}\bfseries\inserttocsectionnumber.}\hspace{0.45em}%
+  {\color{aastone}\inserttocsection}\par\vspace{0.35em}}
+\setbeamertemplate{subsection in toc}{%
+  \leavevmode\hspace{1.7em}{\color{aastone}\small--\hspace{0.3em}\inserttocsubsection}\par\vspace{0.2em}}
+
+% --- 章节分隔页：\section 自动触发（plain 帧），\aaSetSectionpage{off} 可关闭 ---
+% 版式：clay 大编号 + 章节名 + linen 通栏细线 + mini-TOC（当前章节高亮，替代进度条的位置感）
+\setbeamertemplate{section page}{%
+  \vspace*{0.9cm}
+  {\aaheadfont\fontsize{34}{38}\selectfont\color{aaclay}\two@digits\c@section\par}
+  \vspace{0.2em}
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\aaheadfont\LARGE\insertsection\par}
+  \vspace{0.6em}
+  {\color{aalinen}\rule{\textwidth}{0.6pt}\par}
+  \vspace{0.6em}
+  {\tableofcontents[currentsection,hideallsubsections]}}
+\newcommand{\aaSetSectionpage}[1]{\def\aa@sectionpage{#1}}
+\aaSetSectionpage{on}   % 默认开启
+\AtBeginSection[]{%
+  \def\aa@tmp{on}%
+  \ifx\aa@sectionpage\aa@tmp
+    \begin{frame}[plain]\sectionpage\end{frame}%
+  \fi}
+
+% --- 页脚：仅右下角页码 ---
+\setbeamertemplate{footline}{%
+  \hfill{\usebeamerfont{footline}\usebeamercolor[fg]{footline}%
+    \insertframenumber\,/\,\inserttotalframenumber\hspace{0.3cm}}\vspace{0.15cm}%
+}
+
+% --- itemize：小方块、克制用色 ---
+\setbeamertemplate{itemize item}{\raisebox{0.15em}{\scriptsize$\blacksquare$}}
+\setbeamertemplate{itemize subitem}{--}
+
+% --- 双行卡片 ---
+% \card{名称}{注释} 常规态；\carddim{名称}{注释} 压暗态（议程/对比页"当前项全亮、其余压暗"，M11）
+% 可选参数 [group=<名>]：同一 group 的卡片自动等高（跨栏生效），如 \card[group=r1]
+\newtcolorbox{aacard}[1][]{colback=white,colframe=aalinen,boxrule=0.5pt,
+  arc=1.5pt,left=9pt,right=9pt,top=7pt,bottom=7pt,before skip=4pt,after skip=4pt,#1}
+\pgfkeys{/aacardopt/.cd,group/.initial={}}
+\newcommand{\card}[3][]{%
+  \pgfkeys{/aacardopt/.cd,group={},#1}%
+  \edef\aa@grp{\pgfkeysvalueof{/aacardopt/group}}%
+  \ifx\aa@grp\empty\begin{aacard}\else\begin{aacard}[equal height group=\aa@grp]\fi
+    \RaggedRight{\bfseries #2\par}
+    \vspace{1.5pt}
+    \RaggedRight{\small\color{aastone}#3\par}
+  \end{aacard}}
+\newtcolorbox{aacarddim}[1][]{colback=aalinen!40,colframe=aalinen,boxrule=0.5pt,
+  arc=1.5pt,left=9pt,right=9pt,top=7pt,bottom=7pt,before skip=4pt,after skip=4pt,#1}
+\pgfkeys{/aacarddimopt/.cd,group/.initial={}}
+\newcommand{\carddim}[3][]{%
+  \pgfkeys{/aacarddimopt/.cd,group={},#1}%
+  \edef\aa@grp{\pgfkeysvalueof{/aacarddimopt/group}}%
+  \ifx\aa@grp\empty\begin{aacarddim}\else\begin{aacarddim}[equal height group=\aa@grp]\fi
+    \RaggedRight{\color{aastone}\bfseries #2\par}
+    \vspace{1.5pt}
+    \RaggedRight{\small\color{aastone}#3\par}
+  \end{aacarddim}}
+
+% --- 推导页构件 ---
+% \stepmark{项}：推导式中陶土橙下划线标出「本步被替换的项」（M5，CS285 模式）
+\newcommand{\stepmark}[1]{{\color{aaclay}\underline{\textcolor{aaink}{#1}}}}
+% \begin{aacallout}[标题]...\end{aacallout}：浅底圆角补充卡（identity/备注），不打断主叙事（M7）
+\newtcolorbox{aacallout}[1][]{colback=aaclaytint,colbacktitle=aaclaytint,
+  colframe=aalinen,boxrule=0.5pt,arc=2pt,left=8pt,right=8pt,top=6pt,bottom=6pt,
+  toptitle=2pt,before skip=6pt,after skip=6pt,
+  title={#1},fonttitle=\bfseries,coltitle=aaink}
+
+% --- 致谢/Q&A 页：\aathanks{主标题}{副行} ---
+% 与封面互为"书挡"：同款大留白 + clay 短粗线签名元素
+\newcommand{\aathanks}[2]{%
+  \begin{frame}[plain]
+    \vspace*{1.6cm}
+    {\usebeamerfont{title}\usebeamercolor[fg]{title}\aaheadfont #1\par}
+    \vspace{0.5em}
+    {\color{aaclay}\rule{1.6cm}{2.5pt}\par}
+    \vspace{0.6em}
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\mdseries #2\par}
+  \end{frame}}
+
+% --- 页底来源标注：\aasource{...}（图表/数据出处的三级注释字阶，强制左对齐）---
+\newcommand{\aasource}[1]{\par\vspace*{\fill}{\RaggedRight\tiny\color{aastone}#1\par}}
+
+% --- 图片页型（M8/M12）---
+% \fullfig{文件}{一句 takeaway}：整页大图页。keepaspectratio 双约束——图只会缩小、永不溢出
+\newcommand{\fullfig}[2]{%
+  \centering
+  \includegraphics[width=\textwidth,height=0.56\textheight,keepaspectratio]{#1}\par
+  \vspace{0.4em}
+  {\small #2\par}}
+% \figpair{图A}{标A}{图B}{标B}：示意图+结果图成对，自动 (a)/(b) 标签
+% 可选键（pgfkeys）：height=<高> 用高度约束替代栏宽（宽高比悬殊的两图保持等高）；
+%                    pageA=<n>/pageB=<n> 从多页 PDF 取图（如从论文裁页来的图集）
+% 例：\figpair[height=4.2cm,pageA=1,pageB=2]{figs.pdf}{标A}{figs.pdf}{标B}
+\pgfkeys{/aafigpair/.cd,height/.initial={},pageA/.initial={},pageB/.initial={}}
+\newcommand{\figpair}[5][]{%
+  \pgfkeys{/aafigpair/.cd,height={},pageA={},pageB={},#1}%
+  \edef\aa@fo{width=\linewidth,height=0.5\textheight,keepaspectratio}%
+  \edef\aa@h{\pgfkeysvalueof{/aafigpair/height}}%
+  \ifx\aa@h\empty\else\edef\aa@fo{height=\aa@h,keepaspectratio}\fi
+  \edef\aa@pa{\pgfkeysvalueof{/aafigpair/pageA}}%
+  \edef\aa@pb{\pgfkeysvalueof{/aafigpair/pageB}}%
+  \begin{columns}[T]
+    \column{0.48\textwidth}\centering
+      \ifx\aa@pa\empty\expandafter\includegraphics\expandafter[\aa@fo]{#2}\else\expandafter\includegraphics\expandafter[\aa@fo,page=\aa@pa]{#2}\fi\par
+      \vspace{0.15em}{\small\textbf{(a)} #3\par}
+    \column{0.48\textwidth}\centering
+      \ifx\aa@pb\empty\expandafter\includegraphics\expandafter[\aa@fo]{#4}\else\expandafter\includegraphics\expandafter[\aa@fo,page=\aa@pb]{#4}\fi\par
+      \vspace{0.15em}{\small\textbf{(b)} #5\par}
+  \end{columns}}
+
+% --- TikZ 视觉语言冻结（M9 机制化）：自绘示意图统一用这组样式，不现场定义 ---
+% aanode 常规节点 / aaactive 强调节点 / aaedge 常规连线 / aahighlight 强调连线 / aalabel 图内标签
+\tikzset{
+  aanode/.style={draw=aalinen,fill=white,rounded corners=1.5pt,minimum height=0.75cm,font=\small},
+  aaactive/.style={draw=aaclay,fill=aaclaytint,rounded corners=2pt,minimum height=0.72cm,font=\small},
+  aaedge/.style={-stealth,aastone,thick},
+  aahighlight/.style={-stealth,aaclay,very thick},
+  aalabel/.style={font=\footnotesize\color{aastone}}}
+
+% --- 背景变体：米白底在老投影仪上偏色时切纯白 ---
+% \aaSetBackground{white} 切白底；\aaSetBackground{ivory}（默认）恢复米白
+\newcommand{\aaSetBackground}[1]{%
+  \def\aa@tmp{#1}%
+  \def\aa@tmpb{white}%
+  \ifx\aa@tmp\aa@tmpb
+    \setbeamercolor{normal text}{fg=aaink,bg=white}%
+  \else
+    \setbeamercolor{normal text}{fg=aaink,bg=aaivory}%
+  \fi}
+
+\mode<all>

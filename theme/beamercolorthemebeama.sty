@@ -1,0 +1,40 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamercolorthemebeama}[2026/10/21 Beama color theme]
+
+\RequirePackage{xcolor}
+
+% --- 品牌色板 ---
+\definecolor{aaivory}{HTML}{FAF9F5}    % 帧背景
+\definecolor{aaink}{HTML}{1F1E1C}      % 主文字
+\definecolor{aastone}{HTML}{6E6A61}    % 次要文字/注释
+\definecolor{aaclay}{HTML}{D97757}     % 全局强调（每页至多一处）
+\definecolor{aaclaytint}{HTML}{F9EFE7} % 强调浅底
+\definecolor{aalinen}{HTML}{E3E0D8}    % 分隔线/描边
+\definecolor{aaok}{HTML}{4E7A44}       % 仅 ✓
+\definecolor{aabad}{HTML}{B3492E}      % 仅 ✗
+
+% --- beamer 色彩映射 ---
+\setbeamercolor{normal text}{fg=aaink,bg=aaivory}
+\setbeamercolor{structure}{fg=aaink}
+\setbeamercolor{alerted text}{fg=aaclay}
+\setbeamercolor{example text}{fg=aaok}
+
+\setbeamercolor{title}{fg=aaink}
+\setbeamercolor{subtitle}{fg=aastone}
+\setbeamercolor{author}{fg=aaink}
+\setbeamercolor{institute}{fg=aastone}
+\setbeamercolor{date}{fg=aastone}
+
+\setbeamercolor{frametitle}{fg=aaink,bg=}
+\setbeamercolor{framesubtitle}{fg=aastone}
+\setbeamercolor{footline}{fg=aastone,bg=}
+
+\setbeamercolor{itemize item}{fg=aaclay}
+\setbeamercolor{itemize subitem}{fg=aastone}
+\setbeamercolor{enumerate item}{fg=aaink}
+
+\setbeamercolor{block title}{fg=aaink,bg=aaclaytint}
+\setbeamercolor{block body}{fg=aaink,bg=aaclaytint!50}
+\setbeamercolor{caption name}{fg=aastone}
+
+\mode<all>

@@ -1,0 +1,239 @@
+% ============================================================
+%  Beama 汇报骨架
+%  由 scripts/new_talk.sh <name> 生成；替换元信息与正文即可。
+%  写作纪律（详见仓库根目录 AGENTS.md）：
+%    - 帧标题写"结论句"（assertion），不写"名词短语"（topic）；
+%    - 每页至多一处 clay 强调；绿/红仅用于 ✓/✗ 语义；
+%    - 图表/数据出处用 \aasource 标注在页底；
+%    - 构建时自动跑文字溢出检测，越界必须改稿，不要硬缩字号。
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% --- 模板接线（保持不动）---
+\newcommand{\aaFontPath}{../../fonts/}   % talks/<name>/ 到 fonts/ 的相对路径
+\usetheme{beama}
+\usetikzlibrary{arrows.meta,positioning} % positioning: 链条图 below=of 语法需要
+% 可选开关：
+% \aaSetFrametitle{thinline}   % 帧标题换 linen 细线变体（默认 clayrule）
+% \aaSetSectionpage{off}       % 关闭 \section 自动章节分隔页（默认 on）
+
+% --- 元信息 ---
+\title{Your Talk Title Goes Here}
+\subtitle{An Optional Subtitle That Frames the Contribution}
+\author{Your Name \quad Advisor: Prof.~X.}
+\institute{Department of Computer Science and Technology, XX University}
+\date{October 2026}
+
+\begin{document}
+
+% ---- 封面 ----
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% ---- 目录页 ----
+% 取舍规则（AGENTS.md 叙事预算）：≥30 分钟或章节 ≥5 时保留；短汇报（≤20min/≤4章）
+% 此页冗余——删除即可，导航由章节分隔页的 mini-TOC 承担。
+\begin{frame}{Outline}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+% ============================================================
+\section{Background}
+% ============================================================
+
+% 卡片内容页：标题 = 本页结论；先一句铺垫，卡片并列要点（两行：加粗名 + 灰注）
+% 对齐纪律：同一行（左右并排）的卡片用相同 [group=<组名>] 自动等高，跨栏生效
+\begin{frame}{Long Sequences Make Full Attention the Deployment Bottleneck}
+  One-sentence setup that tells the audience why this page matters.
+  \begin{columns}[t]
+    \column{0.48\textwidth}
+      \card[group=r1]{Pain point}{What hurts, in one or two short lines}
+      \vspace{6pt}
+      \card[group=r2]{Root cause}{Why it happens, kept equally brief}
+    \column{0.48\textwidth}
+      \card[group=r1]{Opportunity}{What could be exploited instead}
+      \vspace{6pt}
+      \card[group=r2]{Our angle}{The single idea this talk pursues}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Method}
+% ============================================================
+
+% 图文并排页：左文右图，比例可调；插图的 PDF 版放 figures/ 下，
+% 用 \includegraphics[width=\linewidth]{figures/your-figure.pdf} 引用（矢量优先）。
+% 图先放自包含 TikZ 占位，成稿时替换为上面的 \includegraphics。
+% 作图规范（M9 直接标注式）：标签写进图内、不设编号图例；类别色 ≤3，
+% 与陶土橙同族（aaclay/aaclaytint），辅助信息用 aastone。
+% 注意：含图的一页用 columns[T]（按列顶对齐）；小写 [t] 按首行基线对齐，
+% 图片基线在其几何中心附近，会导致文字列整体下沉溢出。
+\begin{frame}{Block Routing Keeps Only the Critical 5\% of Computation}
+  \begin{columns}[T]
+    \column{0.46\textwidth}
+      Explain the mechanism in two or three short sentences. Point to the
+      figure explicitly so eyes land in the right order.
+      \medskip
+      \begin{itemize}
+        \item Key step one, phrased as an action
+        \item Key step two, with the decisive detail
+        \item What it costs and what it saves
+      \end{itemize}
+    \column{0.50\textwidth}
+      \centering
+      % M9 示例：用主题冻结的 TikZ 样式（aanode/aaactive/aaedge/aahighlight/aalabel），
+      % 不现场自定义样式；标签全部写进图内
+      \begin{tikzpicture}
+        \node[aanode,minimum width=0.95cm] (a) at (0,0) {``[A]''};
+        \node[aanode,minimum width=0.95cm] (b) at (1.2,0) {``[B]''};
+        \node[aanode,minimum width=0.95cm] (c) at (2.4,0) {``[A]''};
+        \node[aanode,minimum width=0.95cm] (d) at (3.6,0) {?};
+        \node[aaactive,minimum width=2.1cm] (h1) at (0.2,-1.55) {prefix-match};
+        \node[aaactive,minimum width=2.1cm] (h2) at (3.6,-1.55) {copy};
+        \draw[aaedge] (h1.north) -- (a.south);
+        \draw[aaedge] (h1.north) -- (c.south);
+        \draw[aahighlight] (h2.north) -- (b.south);
+        \draw[aahighlight] (h2.north) -- (d.south);
+        \node[aalabel,align=center] at (0.2,-2.35) {finds earlier\\``[A]'' tokens};
+        \node[aalabel,align=center] at (3.6,-2.35) {copies the next\\token: ``[B]''};
+      \end{tikzpicture}
+  \end{columns}
+  \aasource{Figure adapted from Doe et al., NeurIPS 2025.}
+\end{frame}
+
+% 路线/对比页（M11）：ours 横幅卡置顶，2×2 压暗等高网格在下方——
+% 不要三列插花（卡片高度/数量不一必然不齐）；行内用相同 [group=] 等高
+\begin{frame}{We Evaluate Three Candidate Architectures}
+  \card{Block-sparse hybrid (ours)}{Top-$k$ blocks + dense local; keeps $<0.3$ pt drop}
+  \vspace{6pt}
+  \begin{columns}[t]
+    \column{0.48\textwidth}
+      \carddim[group=d1]{Transformer baseline}{Standard $O(n^2)$ attention, strong but costly}
+      \vspace{6pt}
+      \carddim[group=d2]{Linear attention}{$O(n)$ kernel trick, fastest but quality drops}
+    \column{0.48\textwidth}
+      \carddim[group=d1]{Retrieval-augmented}{Adds external memory; orthogonal to sparsity}
+      \vspace{6pt}
+      \carddim[group=d2]{MoE routing}{Sparse experts; higher training cost}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Results}
+% ============================================================
+
+% 定理/推导页：block 环境自带 claytint 浅底；公式下方给一行直觉解释
+% M6：recall 前缀用 frame 的【第二参数（副标题）】承载——beamer 会把 frame 后
+% 的第二个 {} 组当副标题，正文若以 {} 组开头会被误吞；
+% M5：\stepmark 标出推导中「本步被替换的项」，视线跟着替换链走；
+% M7：\begin{aacallout} 放补充 identity/备注，不打断主叙事。
+\begin{frame}{Approximation Error Stays Bounded as Sparsity Increases}
+  {\textit{recall:} full attention costs $O(n^2)$ per layer; we replace it
+   with top-$k$ block routing.}
+  \begin{block}{Theorem 1}
+    For the block-sparse estimator $\hat{A}$ with top-$k$ blocks kept per row,
+    \[
+      \lVert A - \hat{A} \rVert_F \le \epsilon_k,
+      \qquad \stepmark{\epsilon_k \to 0} \quad (k \to n).
+    \]
+  \end{block}
+  One line of intuition that makes the statement believable without the proof:
+  the discarded blocks carry $\stepmark{\epsilon_k}$ softmax mass, which decays
+  exponentially with coverage.
+  \begin{aacallout}[Proof sketch]
+    Apply the bound row-wise, then sum over the $n$ rows; details in the paper
+    appendix.
+  \end{aacallout}
+\end{frame}
+
+% 表格页：booktabs 三细线（\toprule/\midrule/\bottomrule）、永禁竖线；
+% clay 只标每列最优值（本例为 ours 行）；数字小数点对齐。
+% 表格放不下时按 AGENTS.md「处理阶梯」：减列 → 转置 → 拆页 → backup → \resizebox。
+\begin{frame}{Block-Sparse Attention Matches Full Attention at 1/8 the FLOPs}
+  \vspace{0.4em}
+  \centering\small
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Method} & \textbf{LongBench} & \textbf{RULER} & \textbf{FLOPs} \\
+    \midrule
+    Full attention & 45.2 & 88.1 & $1.00\times$ \\
+    Linear attention & 41.0 & 79.3 & $0.06\times$ \\
+    Streaming & 39.8 & 72.5 & $0.04\times$ \\
+    \textbf{Block-sparse (ours)} & {\color{aaclay}\bfseries 44.9} & {\color{aaclay}\bfseries 87.6} & {\color{aaclay}\bfseries $0.12\times$} \\
+    \bottomrule
+  \end{tabular}
+  \aasource{Internal evaluation, Sep.\ 2026.}
+\end{frame}
+
+% 整页大图页（M12）：断言标题 + 大图 + 一句 takeaway + 署名。
+% 成稿时一行替换：\fullfig{figures/result.pdf}{One sentence takeaway.}
+% \fullfig 内置 keepaspectratio 双约束——图只会缩小、永不溢出。
+\begin{frame}{Path Patching Localizes the Circuit to Two Heads}
+  \centering
+  \begin{tikzpicture}[font=\small]
+    \fill[aalinen!50,rounded corners=2pt] (0,0) rectangle (9.6,4.4);
+    \node[color=aastone] at (4.8,2.2) {\footnotesize placeholder --- replace with
+      \texttt{\textbackslash fullfig\{figures/result.pdf\}\{takeaway\}}};
+  \end{tikzpicture}
+  \par\vspace{0.4em}
+  {\small One sentence takeaway: \textbf{two heads do most of the work}; the
+   rest of the model is largely unaffected.\par}
+  \aasource{Adapted from Wang et al., 2022, Fig.~12.}
+\end{frame}
+
+% 双图成对页（M8）：示意图 + 结果图，(a)/(b) 标签对齐。
+% 占位用两栏示意；真实图片一行替换为：
+%   \figpair{figures/schematic.pdf}{What we do}{figures/result.pdf}{What we see}
+% 宽高比悬殊的两图会一高一矮——用高度约束保持等高（标签同高）：
+%   \figpair[height=4.2cm,pageA=1,pageB=2]{figures.pdf}{标A}{figures.pdf}{标B}
+% 同文件多页 PDF（如论文裁页）用 pageA/pageB 指定页码。
+\begin{frame}{Schematic and Results Tell the Same Story}
+  \begin{columns}[T]
+    \column{0.48\textwidth}\centering
+      \begin{tikzpicture}[font=\small]
+        \fill[aalinen!50,rounded corners=2pt] (0,0) rectangle (5.6,3.2);
+        \node[color=aastone] at (2.8,1.6) {\footnotesize schematic};
+      \end{tikzpicture}\par
+      \vspace{0.15em}{\small\textbf{(a)} What we do\par}
+    \column{0.48\textwidth}\centering
+      \begin{tikzpicture}[font=\small]
+        \fill[aalinen!50,rounded corners=2pt] (0,0) rectangle (5.6,3.2);
+        \node[color=aastone] at (2.8,1.6) {\footnotesize result};
+      \end{tikzpicture}\par
+      \vspace{0.15em}{\small\textbf{(b)} What we see\par}
+  \end{columns}
+  \aasource{(a) Mechanism sketch; (b) experimental result.}
+\end{frame}
+
+% ============================================================
+\section{Conclusion}
+% ============================================================
+
+% 总结页：编号要点，每条一行、先结论后依据
+\begin{frame}{Three Things to Remember}
+  \begin{enumerate}
+    \item \textbf{Problem} --- one line on why it mattered.
+    \item \textbf{Method} --- one line on the core idea.
+    \item \textbf{Result} --- the single strongest number.
+  \end{enumerate}
+\end{frame}
+
+% ---- 致谢/Q&A 页（与封面互为"书挡"版式）----
+\aathanks{Thank You!}{your.email@university.edu}
+
+% ---- 备份页：\appendix 之后的内容不进主叙事，留待提问 ----
+\appendix
+
+\begin{frame}{Backup: Implementation Details}
+  Extra detail reserved for questions, not for the main narrative.
+\end{frame}
+
+\begin{frame}{Backup: Additional Numbers}
+  \begin{itemize}
+    \item Supplementary result one
+    \item Supplementary result two
+  \end{itemize}
+\end{frame}
+
+\end{document}

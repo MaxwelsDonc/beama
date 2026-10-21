@@ -1,0 +1,45 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerfontthemebeama}[2026/10/21 Beama font theme]
+
+\RequirePackage{fontspec}
+\RequirePackage{xeCJK}
+\RequirePackage{unicode-math}
+
+% --- 西文（TeX Live 内置 OTF，按文件名引用）---
+\newfontfamily\aahead{SourceSerif4-Regular.otf}[BoldFont=SourceSerif4-Semibold.otf]
+% 注：Italic 实际文件名为 SourceSans3-RegularIt.otf（SourceSans3-It.otf 不存在）
+\setsansfont{SourceSans3-Regular.otf}[BoldFont=SourceSans3-Bold.otf,ItalicFont=SourceSans3-RegularIt.otf]
+\setmonofont{SourceCodePro-Regular.otf}[BoldFont=SourceCodePro-Bold.otf,Scale=0.95]
+
+% 封面副标题用西文中等字重（Source Sans 3 Medium，较 Regular 略沉、较 Bold 柔和）
+\newfontfamily\aasansmed{SourceSans3-Medium.otf}[BoldFont=SourceSans3-Bold.otf]
+
+% --- 中文（正文黑体、标题宋体，气质与西文一一对应）---
+% 字体随项目打包（OFL 许可，见 fonts/LICENSE）。\aaFontPath 为 fonts/ 相对编译目录的路径：
+% talks/<name>/ 布局为 ../../fonts/（骨架已接好）；从其他深度编译时需相应覆盖
+\providecommand{\aaFontPath}{../fonts/}
+\setCJKmainfont[Path=\aaFontPath,BoldFont=SourceHanSansSC-Bold.otf]{SourceHanSansSC-Regular.otf}
+\setCJKsansfont[Path=\aaFontPath,BoldFont=SourceHanSansSC-Bold.otf]{SourceHanSansSC-Regular.otf}
+\newCJKfontfamily\aacjkhead[Path=\aaFontPath,BoldFont=SourceHanSerifSC-Bold.otf]{SourceHanSerifSC-SemiBold.otf}
+\newCJKfontfamily\aacjkmed[Path=\aaFontPath,BoldFont=SourceHanSansSC-Bold.otf]{SourceHanSansSC-Medium.otf}
+
+% --- 数学 ---
+\setmathfont{STIXTwoMath-Regular.otf}
+
+% --- 标题组合族：西文衬线 + 中文宋体（混搭一致性核心）---
+\DeclareRobustCommand\aaheadfont{\aahead\aacjkhead}
+% --- 中等字重组合族：西文 Source Sans 3 Medium + 中文思源黑体 Medium（封面副标题用）---
+\DeclareRobustCommand\aamedfont{\aasansmed\aacjkmed}
+
+% --- 三级字阶 ---
+\setbeamerfont{title}{series=\bfseries,size=\huge}
+\setbeamerfont{subtitle}{size=\large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{framesubtitle}{size=\normalsize}
+\setbeamerfont{author}{size=\normalsize}
+\setbeamerfont{institute}{size=\small}
+\setbeamerfont{date}{size=\small}
+\setbeamerfont{footline}{size=\tiny}
+\setbeamerfont{caption}{size=\small}
+
+\mode<all>
