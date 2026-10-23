@@ -1,12 +1,15 @@
-# Beama
+# Beama（增辉）
+
+> 为你的研究增辉。/ *Add radiance to your research.*
 
 A warm, editorial-style Beamer theme for academic talks — 16:9, XeLaTeX,
 CJK fonts bundled — plus an **agent-native workflow**: tell your coding agent
 "make me a talk about X" and it scaffolds, builds, and overflow-checks the deck.
 The agent playbook is [AGENTS.md](AGENTS.md), the repo's entry document.
 
-Anthropic 风格学术汇报 beamer 主题：暖米白底 + 陶土橙单强调，衬线标题 +
-无衬线正文，断言式帧标题。对 agent 说一句"帮我做个关于 X 的汇报"即可走完全流程。
+Anthropic 风格学术汇报 beamer 主题，中文社区名「增辉」：暖米白底 + 陶土橙
+单强调，衬线标题 + 无衬线正文，断言式帧标题。对 agent 说一句
+"帮我做个关于 X 的汇报"即可走完全流程。
 
 ## Quick start
 

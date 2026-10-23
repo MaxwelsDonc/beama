@@ -1,6 +1,6 @@
 # AGENTS.md — 本仓库的唯一入口文档
 
-beamer 学术汇报模板（Beama 主题，16:9，XeLaTeX，中西文字体已随库打包）。
+beamer 学术汇报模板（Beama 主题，中文名「增辉」——为你的研究增辉；16:9，XeLaTeX，中西文字体已随库打包）。
 用户不手动操作本仓库：所有"做汇报 / 做 PPT / 改 slides"的需求都由 agent 按本指南完成。
 本文件自包含；只有扩展主题时才需要读 `docs/design-spec.md`。
 
